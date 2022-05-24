@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>my maps</title>
+  <style>
+    #target {
+      width: 700px;
+      height: 400px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="target"></div>
+  <input type="text" id="keyword">
+  <button id="search">Search</button>
+
+  <script>
+    function initMap() {
+      'use strict';
+
+      let target = document.getElementById('target');
+      let map;
+      let fukuoka = { lat: 33.590184, lng: 130.401689 };
+      let service;
+
+      map = new google.maps.Map(target, {
+        center: fukuoka,
+        zoom: 15,
+      });
+      document.getElementById('search').addEventListener('click', function () {
+        service = new google.maps.places.PlacesService(map);
+        service.nearbySearch({
+          location: fukuoka,
+          radius: '500',
+          name: document.getElementById('keyword').value
+        }, function (results, status) {
+          var i;
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+            for (i = 0; i < results.length; i++) {
+              new google.maps.Marker({
+                map: map,
+                position: results[i].geometry.location,
+                title: results[i].name
+              });
+            }
+          } else {
+            alert('Failed: ' + status);
+            return;
+          }
+        });
+      });
+    }
+
+  </script>
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap&libraries=places" async defer></script>
+</body>
+
+</html>
